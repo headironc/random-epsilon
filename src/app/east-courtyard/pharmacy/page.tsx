@@ -1,7 +1,11 @@
 "use client";
 
+import { Layout } from "~/components/Layout";
+
 export default function Page() {
     return (
-        <main className="flex min-h-screen items-center justify-center"></main>
+        <Layout title="西药房">
+            <main></main>
+        </Layout>
     );
 }
