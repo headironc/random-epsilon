@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import Image from "next/image";
 
-export function Layout({
+export default function Layout({
     children,
     title,
 }: {
@@ -23,11 +23,13 @@ export function Layout({
                     />
                 </div>
                 <div className="flex h-full flex-1 items-center justify-center">
-                    <h1 className="text-7xl font-bold">{title}</h1>
+                    <h1 className="whitespace-nowrap text-7xl font-bold">
+                        {title}
+                    </h1>
                 </div>
                 <div className="w-96" />
             </header>
-            <section>{children}</section>
+            <section className="p-6">{children}</section>
         </div>
     );
 }
