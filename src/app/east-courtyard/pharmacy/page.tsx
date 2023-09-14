@@ -48,6 +48,10 @@ export default function Page() {
                 return patients;
             }
 
+            if (!result.FPHM) {
+                return [];
+            }
+
             const patient: OldPatient = {
                 invoice: result.FPHM,
                 name: result.BRXM,

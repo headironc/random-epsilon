@@ -2,9 +2,9 @@ export interface NewPatient {
     id: number;
     // 药房
     // 2代表草药房(药剂科)，7代表东院草药房(药剂科)
-    pharmacy: 2 | 7;
+    pharmacy: PharmacyType;
     // 1代表已叫号，0代表未叫号
-    callSign: 0 | 1;
+    callSign: CallSign;
     // 发票号
     invoice: string;
     // 病人姓名
@@ -12,11 +12,11 @@ export interface NewPatient {
     // 签到时间
     signInTime: string;
     // 签到类型, 0代表未喊号，1代表已喊号
-    signInType: 0 | 1;
+    signInType: SignType;
     // 签到序号
     signInNumber: number;
     // 处方类型，1代表西药，2代表中成药，3代表中草药
-    prescriptionType: 1 | 2 | 3;
+    prescriptionType: PrescriptionType;
     // 叫号时间
     callTime?: string;
 }
@@ -24,7 +24,7 @@ export interface NewPatient {
 export interface OldPatient {
     name: string;
     invoice: string;
-    callSign: 0 | 1;
+    callSign: CallSign;
     signInNumber: number;
     signInTime: string;
     window: Window;
@@ -39,7 +39,7 @@ export interface OldFakePatient {
     BRXM: string;
     CKH: Window;
     FPHM: string;
-    JHBZ: 0 | 1;
+    JHBZ: CallSign;
     XH: string;
     QDSJ: string;
 }
@@ -51,14 +51,35 @@ export enum Window {
 }
 
 export interface NewFakePatient {
-    YFSB: 2 | 7;
-    JHBZ: 0 | 1;
+    YFSB: PharmacyType;
+    JHBZ: CallSign;
     FPHM: string;
     BRXM: string;
     QDRQ: string;
-    QDLX: 0 | 1;
+    QDLX: SignType;
     QDXH: number;
-    CFLX: 1 | 2 | 3;
+    CFLX: PrescriptionType;
     HJRQ?: string;
     ID: number;
+}
+
+export enum PharmacyType {
+    // 西药房
+    WesternMedicine = 2,
+    // 草药房
+    ChineseHerbalMedicine = 7,
+}
+
+export enum SignType {
+    Signed = 1,
+    NotSigned = 0,
+}
+
+export enum PrescriptionType {
+    // 西药
+    WesternMedicine = 1,
+    // 中成药
+    ChinesePatentDrug = 2,
+    // 中草药
+    ChineseHerbalMedicine = 3,
 }

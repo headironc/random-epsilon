@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { fakerZH_CN as faker } from "@faker-js/faker";
 
 import { CallSign, OldFakePatient, Window } from "~/types/patient";
 
-const newFakePatient = (): OldFakePatient => ({
+const oldFakePatient = (): OldFakePatient => ({
     BRXM: faker.person.fullName(),
     FPHM: faker.string.numeric(8), // 发票号码
     CKH: faker.helpers.enumValue(Window), // 窗口号
@@ -14,7 +14,7 @@ const newFakePatient = (): OldFakePatient => ({
 
 export const patients: OldFakePatient[] = Array.from(
     { length: 0 },
-    newFakePatient,
+    oldFakePatient,
 ).sort((a, b) => Number(a.XH) - Number(b.XH));
 
 export const setCallSign = (FPHM: string, JHBZ: CallSign) => {

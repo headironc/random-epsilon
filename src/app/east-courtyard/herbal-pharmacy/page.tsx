@@ -2,8 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import Layout from "~/components/Layout";
 import Loading from "~/components/Loading";
 import ErrorComponent from "~/components/Error";
+import HerbalPharmacy from "~/components/HerbalPharmacy";
 
 import { NewFakePatient, NewPatient } from "~/types/patient";
 
@@ -16,12 +18,9 @@ export default function Page() {
     >({
         queryKey: ["patients", "east-courtyard/herbal-pharmacy"],
         queryFn: async () => {
-            const response = await fetch(
-                "/api/patients/east-courtyard/herbal-pharmacy",
-                {
-                    method: "POST",
-                },
-            );
+            const response = await fetch("/api/patients/herbal-pharmacy", {
+                method: "POST",
+            });
 
             if (!response.ok) {
                 throw new Error(response.statusText);
@@ -66,7 +65,7 @@ export default function Page() {
 
             return [patient];
         },
-        refetchInterval: 1000 * 3,
+        refetchInterval: 1000 * 1,
     });
 
     if (error) {
@@ -77,9 +76,15 @@ export default function Page() {
         return <Loading />;
     }
 
-    const patients = data;
+    const patients = data.filter(
+        patient => patient.pharmacy === 7 && patient.prescriptionType === 3,
+    );
 
     return (
-        <main className="flex min-h-screen items-center justify-center"></main>
+        <Layout title="草药房">
+            <main className="flex h-full flex-col justify-between">
+                <HerbalPharmacy patients={patients} />
+            </main>
+        </Layout>
     );
 }

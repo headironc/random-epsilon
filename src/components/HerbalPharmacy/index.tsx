@@ -13,6 +13,7 @@ import {
 import {
     Table,
     TableBody,
+    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -21,11 +22,14 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 import { Pagination } from "~/types";
-import { CallSign, OldPatient, Window } from "~/types/patient";
+import { CallSign, NewPatient } from "~/types/patient";
 
 interface Query extends Pagination {}
 
-export default function Pharmacy(props: { patients: OldPatient[] }) {
+export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
+    const wait = props.patients.filter(patient => patient.signInType === 0);
+    const take = props.patients.filter(patient => patient.signInType === 1);
+
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(
         speechSynthesis.getVoices() ?? [],
     );
@@ -44,16 +48,66 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
         [voices, speechSynthesis.onvoiceschanged],
     );
 
-    const [call, setCall] = useState<OldPatient | undefined>();
+    const [call, setCall] = useState<NewPatient | undefined>();
 
     useEffect(() => {
         if (!call) {
-            setCall(props.patients.find(patient => patient.callSign === 1));
+            setCall(take.find(patient => patient.callSign === 1));
         }
-    }, [props.patients, call]);
+    }, [call, take]);
 
+    const setCallSign = (invoice: string, callSign: CallSign) => {
+        take.forEach(patient => {
+            if (patient.invoice === invoice) {
+                patient.callSign = callSign;
+            }
+        });
+    };
+
+    return (
+        <>
+            <div className="grid h-full grid-cols-2 gap-x-4">
+                <Patients patients={wait} title="准备中 Preparing" />
+                <Patients patients={take} title="请取药 Ready" />
+            </div>
+            {call && (
+                <Call
+                    call={call}
+                    setCall={setCall}
+                    open={true}
+                    voice={voice}
+                    setCallSign={setCallSign}
+                />
+            )}
+        </>
+    );
+}
+
+const columns: ColumnDef<NewPatient>[] = [
+    {
+        header: "签到序号",
+        accessorKey: "signInNumber",
+        size: 400,
+    },
+    {
+        header: "姓名",
+        accessorKey: "name",
+        size: 528,
+        cell: ({ getValue }) => {
+            const name = getValue<string>();
+
+            return (
+                <>{`${name.charAt(0) + name.slice(1).replace(/./g, "*")}`}</>
+            );
+        },
+    },
+];
+
+type Title = "请取药 Ready" | "准备中 Preparing";
+
+function Patients(props: { patients: NewPatient[]; title: Title }) {
     const [query, setQuery] = useState<Query>({
-        limit: 12,
+        limit: 6,
         offset: 0,
     });
 
@@ -67,16 +121,20 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
                 ? 0
                 : query.limit - (count % query.limit);
 
-        const placeholder = Array<OldPatient>(add).fill({
-            window: Window.One,
+        const placeholder = Array<NewPatient>(add).fill({
             callSign: 0,
             invoice: "",
             name: "",
+            id: 0,
+            pharmacy: 7,
+            prescriptionType: 3,
             signInNumber: 0,
             signInTime: "",
+            signInType: 0,
+            callTime: "",
         });
 
-        const patients: OldPatient[] = [
+        const patients: NewPatient[] = [
             ...props.patients,
             ...placeholder,
         ].slice(query.offset * query.limit, (query.offset + 1) * query.limit);
@@ -86,14 +144,6 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
             patients,
         };
     }, [props.patients, query.limit, query.offset]);
-
-    const setCallSign = (invoice: string, callSign: CallSign) => {
-        patients.forEach(patient => {
-            if (patient.invoice === invoice) {
-                patient.callSign = callSign;
-            }
-        });
-    };
 
     const pageCount = useMemo(
         () => Math.ceil(count / query.limit),
@@ -118,72 +168,13 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
         return () => clearTimeout(timer);
     }, [query, pageCount]);
 
-    return (
-        <>
-            <div className="grid grid-cols-2">
-                <Patients
-                    patients={patients.slice(0, 6)}
-                    offset={query.offset}
-                    pageCount={pageCount}
-                />
-                <Patients
-                    patients={patients.slice(6, 12)}
-                    offset={query.offset}
-                    pageCount={pageCount}
-                />
-            </div>
-            <div className="flex items-center justify-center">
-                <span className="text-6xl">
-                    准备中 Preparing{" "}
-                    {pageCount !== 0 &&
-                        `第 ${query.offset + 1} / ${pageCount} 页`}
-                </span>
-            </div>
-            {call && (
-                <Call
-                    call={call}
-                    setCall={setCall}
-                    open={true}
-                    voice={voice}
-                    setCallSign={setCallSign}
-                />
-            )}
-        </>
-    );
-}
-
-const columns: ColumnDef<OldPatient>[] = [
-    {
-        header: "签到序号",
-        accessorKey: "signInNumber",
-        size: 400,
-    },
-    {
-        header: "姓名",
-        accessorKey: "name",
-        size: 536,
-        cell: ({ getValue }) => {
-            const name = getValue<string>();
-
-            return (
-                <>{`${name.charAt(0) + name.slice(1).replace(/./g, "*")}`}</>
-            );
-        },
-    },
-];
-
-function Patients(props: {
-    patients: OldPatient[];
-    offset: number;
-    pageCount: number;
-}) {
     const table = useReactTable({
-        data: props.patients,
-        pageCount: props.pageCount,
+        data: patients,
+        pageCount: pageCount,
         state: {
             pagination: {
-                pageSize: 6,
-                pageIndex: props.offset,
+                pageSize: query.limit,
+                pageIndex: query.offset,
             },
         },
         manualPagination: true,
@@ -193,6 +184,15 @@ function Patients(props: {
 
     return (
         <Table>
+            <TableCaption>
+                <div className="flex items-center justify-center gap-x-8 py-5">
+                    <span className="text-5xl">{props.title}</span>
+                    <span className="text-4xl">
+                        {pageCount !== 0 &&
+                            `第 ${query.offset + 1} / ${pageCount} 页`}
+                    </span>
+                </div>
+            </TableCaption>
             <TableHeader>
                 {table.getHeaderGroups().map(headerGroup => (
                     <TableRow key={headerGroup.id}>
@@ -253,8 +253,8 @@ function Call({
     voice,
     setCallSign,
 }: {
-    call: OldPatient;
-    setCall: Dispatch<SetStateAction<OldPatient | undefined>>;
+    call: NewPatient;
+    setCall: Dispatch<SetStateAction<NewPatient | undefined>>;
     open: boolean;
     voice: SpeechSynthesisVoice | undefined;
     setCallSign: (invoice: string, callSign: CallSign) => void;
@@ -262,7 +262,7 @@ function Call({
     const mutation = useMutation({
         mutationKey: ["patients", "cancel", call.invoice],
         mutationFn: () =>
-            fetch(`/api/patients/east-courtyard/pharmacy/${call.invoice}`, {
+            fetch(`/api/patients/herbal-pharmacy/${call.invoice}`, {
                 method: "PATCH",
             }),
         onSuccess: () => {
@@ -272,7 +272,7 @@ function Call({
     });
 
     useTts({
-        children: `请${call.signInNumber}号${call.name}到西药房${call.window}号窗口取药`,
+        children: `请${call.signInNumber}号${call.name}到草药房3号窗口取药`,
         voice,
         rate: 0.75,
         onEnd: () => mutation.mutate(),
@@ -289,7 +289,7 @@ function Call({
                     }号${
                         call.name.charAt(0) +
                         call.name.slice(1).replace(/./g, "*")
-                    }到西药房${call.window}号窗口取药`}</span>
+                    }到草药房3号窗口取药`}</span>
                 </div>
             </DialogContent>
         </Dialog>
