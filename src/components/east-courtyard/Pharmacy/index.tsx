@@ -41,7 +41,7 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
 
     const voice = useMemo(
         () => voices.find(voice => voice.lang === "zh-CN"),
-        [voices, speechSynthesis.onvoiceschanged],
+        [voices],
     );
 
     const [call, setCall] = useState<OldPatient | undefined>();
