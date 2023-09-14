@@ -7,13 +7,13 @@ import Loading from "~/components/Loading";
 import ErrorComponent from "~/components/Error";
 import Pharmacy from "~/components/east-courtyard/Pharmacy";
 
-import { OldFakePatient, Patient } from "~/types/patient";
+import { OldFakePatient, OldPatient } from "~/types/patient";
 
 export default function Page() {
     const { data, isLoading, error } = useQuery<
-        Patient[],
+        OldPatient[],
         Error,
-        Patient[],
+        OldPatient[],
         string[]
     >({
         queryKey: ["patients", "east-courtyard/pharmacy"],
@@ -36,7 +36,7 @@ export default function Page() {
             } = await response.json();
 
             if (Array.isArray(result)) {
-                const patients = result.map<Patient>(item => ({
+                const patients = result.map<OldPatient>(item => ({
                     window: item.CKH,
                     callSign: item.JHBZ,
                     invoice: item.FPHM,
@@ -48,7 +48,7 @@ export default function Page() {
                 return patients;
             }
 
-            const patient: Patient = {
+            const patient: OldPatient = {
                 invoice: result.FPHM,
                 name: result.BRXM,
                 callSign: result.JHBZ,
@@ -59,7 +59,7 @@ export default function Page() {
 
             return [patient];
         },
-        refetchInterval: 1000 * 3,
+        refetchInterval: 1000 * 1,
     });
 
     if (error) {
@@ -74,7 +74,7 @@ export default function Page() {
 
     return (
         <Layout title="西药房">
-            <main>
+            <main className="flex h-full flex-col justify-between">
                 <Pharmacy patients={patients} />
             </main>
         </Layout>

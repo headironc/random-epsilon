@@ -11,7 +11,7 @@ export default function Layout({
     title: string;
 }) {
     return (
-        <div className="min-h-screen">
+        <div className="h-screen">
             <header className="flex h-24 rounded-sm border shadow-sm">
                 <div className="flex w-96 items-center justify-center">
                     <Image
@@ -29,7 +29,7 @@ export default function Layout({
                 </div>
                 <div className="w-96" />
             </header>
-            <section className="p-6">{children}</section>
+            <section className="h-[calc(100%-6rem)] p-6">{children}</section>
         </div>
     );
 }
