@@ -6,7 +6,7 @@ const nextConfig = {
                 {
                     source: "/api/patients/herbal-pharmacy",
                     destination:
-                        "http://192.168.61.68:7876/hai/HttpEntry/?service=PGJH_CYFDL&urid=PDJH&pwd=PDJH",
+                        "http://192.168.61.68:7876/hai/HttpEntry/?service=PDJH_CYFDL&urid=PDJH&pwd=PDJH",
                 },
                 {
                     source: "/api/patients/east-courtyard/pharmacy/call",

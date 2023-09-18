@@ -3,7 +3,7 @@ export interface NewPatient {
     // 药房
     // 2代表草药房(药剂科)，7代表东院草药房(药剂科)
     pharmacy: PharmacyType;
-    // 1代表已叫号，0代表未叫号
+    // 1代表叫号，0代表未叫号，2代表已叫号
     callSign: CallSignNumber;
     // 发票号
     invoice: string;
@@ -11,7 +11,7 @@ export interface NewPatient {
     name: string;
     // 签到时间
     signInTime: string;
-    // 签到类型, 0代表未喊号，1代表已喊号
+    // 签到类型, 0代表未喊号，1代表喊号，
     signInType: SignType;
     // 签到序号
     signInNumber: number;
@@ -36,8 +36,9 @@ export enum CallSign {
 }
 
 export enum CallSignNumber {
-    Called = 1,
+    Calling = 1,
     NotCalled = 0,
+    Called = 2,
 }
 
 export interface OldFakePatient {

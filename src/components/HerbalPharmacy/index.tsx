@@ -27,8 +27,10 @@ import { CallSignNumber, NewPatient } from "~/types/patient";
 interface Query extends Pagination {}
 
 export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
-    const wait = props.patients.filter(patient => patient.signInType === 0);
-    const take = props.patients.filter(patient => patient.signInType === 1);
+    const wait = props.patients.filter(patient => patient.callSign === 0);
+    const take = props.patients.filter(
+        patient => patient.callSign === 1 || patient.callSign === 2,
+    );
 
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(
         speechSynthesis.getVoices() ?? [],
