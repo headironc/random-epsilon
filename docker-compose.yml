@@ -1,45 +1,13 @@
-version: "3"
 services:
-  app:
-    container_name: nginx
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
+  random-epsilon:
+    container_name: random-epsilon
+    image: pure-fish-next:latest
+    restart: on-failure:3
+    build:
+      context: ./random-epsilon
+      dockerfile: Dockerfile
     ports:
-      # These ports are in format <host-port>:<container-port>
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP
-    healthcheck:
-      test: ["CMD", "/bin/check-health"]
-      interval: 10s
-      timeout: 3s
-    environment:
-      DB_MYSQL_HOST: "nginx_db"
-      DB_MYSQL_PORT: 3306
-      DB_MYSQL_USER: "administrator"
-      DB_MYSQL_PASSWORD: "3dbkGMzraAGYKoV_wMjCe"
-      DB_MYSQL_NAME: "nginx_db"
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
-    networks:
-      - nginx
-    depends_on:
-      - nginx_db
-
-  nginx_db:
-    container_name: nginx_db
-    image: 'jc21/mariadb-aria:latest'
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: '3dbkGMzraAGYKoV_wMjCe'
-      MYSQL_DATABASE: 'nginx_db'
-      MYSQL_USER: 'administrator'
-      MYSQL_PASSWORD: '3dbkGMzraAGYKoV_wMjCe'
-    volumes:
-      - ./data/mysql:/var/lib/mysql
+      - 3000:3000
     networks:
       - nginx
 
