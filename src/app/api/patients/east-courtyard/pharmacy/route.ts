@@ -7,7 +7,7 @@ const oldFakePatient = (): OldFakePatient => ({
     BRXM: faker.person.fullName(),
     FPHM: faker.string.numeric(8), // 发票号码
     CKH: faker.helpers.enumValue(Window), // 窗口号
-    JHBZ: 0, // 叫号标志
+    JHBZ: CallSign.NotCalled, // 叫号标志
     QDSJ: faker.date.recent().toISOString(), // 签到时间
     XH: faker.string.numeric({ length: { min: 2, max: 4 }, exclude: ["0"] }), // 签到序号
 });
@@ -31,7 +31,7 @@ export async function POST() {
         BRXM: faker.person.fullName(),
         FPHM: faker.string.numeric(8), // 发票号码
         CKH: faker.helpers.enumValue(Window), // 窗口号
-        JHBZ: 0, // 叫号标志
+        JHBZ: CallSign.NotCalled, // 叫号标志
         QDSJ: faker.date.recent().toISOString(), // 签
     });
 
@@ -41,7 +41,7 @@ export async function POST() {
             BRXM: faker.person.fullName(),
             FPHM: faker.string.numeric(8), // 发票号码
             CKH: faker.helpers.enumValue(Window), // 窗口号
-            JHBZ: 1, // 叫号标志
+            JHBZ: CallSign.Called, // 叫号标志
             QDSJ: faker.date.recent().toISOString(), // 签
         });
     }
