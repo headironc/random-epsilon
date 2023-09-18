@@ -1,0 +1,17 @@
+services:
+  random-epsilon:
+    container_name: random-epsilon
+    image: pure-fish-next:latest
+    restart: on-failure:3
+    build:
+      context: ./random-epsilon
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - nginx
+
+networks:
+  nginx:
+    external: true
+    name: nginx
