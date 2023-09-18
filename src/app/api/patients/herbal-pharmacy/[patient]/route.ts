@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { setCallSign } from "../route";
-import { CallSign } from "~/types/patient";
+import { CallSignNumber } from "~/types/patient";
 
 export async function PATCH(
     req: NextRequest,
@@ -9,7 +9,7 @@ export async function PATCH(
 ) {
     const FPHM = params.patient;
 
-    setCallSign(FPHM, CallSign.NotCalled);
+    setCallSign(FPHM, CallSignNumber.NotCalled);
 
     return NextResponse.json("success");
 }

@@ -4,7 +4,7 @@ export interface NewPatient {
     // 2代表草药房(药剂科)，7代表东院草药房(药剂科)
     pharmacy: PharmacyType;
     // 1代表已叫号，0代表未叫号
-    callSign: CallSign;
+    callSign: CallSignNumber;
     // 发票号
     invoice: string;
     // 病人姓名
@@ -35,6 +35,11 @@ export enum CallSign {
     NotCalled = "0",
 }
 
+export enum CallSignNumber {
+    Called = 1,
+    NotCalled = 0,
+}
+
 export interface OldFakePatient {
     BRXM: string;
     CKH: Window;
@@ -52,7 +57,7 @@ export enum Window {
 
 export interface NewFakePatient {
     YFSB: PharmacyType;
-    JHBZ: CallSign;
+    JHBZ: CallSignNumber;
     FPHM: string;
     BRXM: string;
     QDRQ: string;

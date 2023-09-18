@@ -3,6 +3,7 @@ import { fa, fakerZH_CN as faker } from "@faker-js/faker";
 
 import {
     CallSign,
+    CallSignNumber,
     NewFakePatient,
     PharmacyType,
     PrescriptionType,
@@ -14,7 +15,7 @@ const newFakePatient = (): NewFakePatient => ({
     CFLX: faker.helpers.enumValue(PrescriptionType),
     FPHM: faker.string.numeric(8), // 发票号码
     ID: faker.number.int(),
-    JHBZ: faker.helpers.enumValue(CallSign),
+    JHBZ: faker.helpers.enumValue(CallSignNumber),
     QDLX: faker.helpers.enumValue(SignType),
     QDRQ: faker.date.recent().toISOString(),
     QDXH: faker.number.int(),
@@ -26,7 +27,7 @@ export const patients: NewFakePatient[] = Array.from(
     newFakePatient,
 ).sort((a, b) => a.QDXH - b.QDXH);
 
-export const setCallSign = (FPHM: string, JHBZ: CallSign) => {
+export const setCallSign = (FPHM: string, JHBZ: CallSignNumber) => {
     patients.forEach(patient => {
         if (patient.FPHM === FPHM) {
             patient.JHBZ = JHBZ;
@@ -41,7 +42,7 @@ export async function POST() {
         CFLX: 3,
         FPHM: faker.string.numeric(8), // 发票号码
         ID: faker.number.int(),
-        JHBZ: faker.helpers.enumValue(CallSign),
+        JHBZ: faker.helpers.enumValue(CallSignNumber),
         QDLX: faker.helpers.enumValue(SignType),
         QDRQ: faker.date.recent().toISOString(),
         YFSB: faker.helpers.enumValue(PharmacyType),
@@ -55,7 +56,7 @@ export async function POST() {
             CFLX: 3,
             FPHM: faker.string.numeric(8), // 发票号码
             ID: faker.number.int(),
-            JHBZ: faker.helpers.enumValue(CallSign),
+            JHBZ: faker.helpers.enumValue(CallSignNumber),
             QDLX: faker.helpers.enumValue(SignType),
             QDRQ: faker.date.recent().toISOString(),
             YFSB: faker.helpers.enumValue(PharmacyType),

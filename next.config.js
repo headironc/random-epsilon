@@ -18,6 +18,11 @@ const nextConfig = {
                     destination:
                         "http://192.168.61.135/hai/HttpEntry/?service=ALFYJ_PDDL&urid=HIS&pwd=HIS",
                 },
+                {
+                    source: "/api/patients/herbal-pharmacy/call",
+                    destination:
+                        "http://192.168.61.135/hai/HttpEntry/?service=PDJH_CYFJHBZ&urid=HIS&pwd=HIS",
+                },
             ],
         };
     },

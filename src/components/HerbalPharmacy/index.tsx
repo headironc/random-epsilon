@@ -22,7 +22,7 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 import { Pagination } from "~/types";
-import { CallSign, NewPatient } from "~/types/patient";
+import { CallSignNumber, NewPatient } from "~/types/patient";
 
 interface Query extends Pagination {}
 
@@ -52,11 +52,11 @@ export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
 
     useEffect(() => {
         if (!call) {
-            setCall(take.find(patient => patient.callSign === "1"));
+            setCall(take.find(patient => patient.callSign === 1));
         }
     }, [call, take]);
 
-    const setCallSign = (invoice: string, callSign: CallSign) => {
+    const setCallSign = (invoice: string, callSign: CallSignNumber) => {
         take.forEach(patient => {
             if (patient.invoice === invoice) {
                 patient.callSign = callSign;
@@ -128,7 +128,7 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
                 : query.limit - (count % query.limit);
 
         const placeholder = Array<NewPatient>(add).fill({
-            callSign: CallSign.NotCalled,
+            callSign: CallSignNumber.NotCalled,
             invoice: "",
             name: "",
             id: 0,
@@ -263,17 +263,23 @@ function Call({
     setCall: Dispatch<SetStateAction<NewPatient | undefined>>;
     open: boolean;
     voice: SpeechSynthesisVoice | undefined;
-    setCallSign: (invoice: string, callSign: CallSign) => void;
+    setCallSign: (invoice: string, callSign: CallSignNumber) => void;
 }) {
     const mutation = useMutation({
         mutationKey: ["patients", "cancel", call.invoice],
         mutationFn: () =>
-            fetch(`/api/patients/herbal-pharmacy/${call.invoice}`, {
-                method: "PATCH",
+            fetch(`/api/patients/herbal-pharmacy/call`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    FPHM: call.invoice,
+                }),
             }),
         onSuccess: () => {
             setCall(undefined);
-            setCallSign(call.invoice, CallSign.NotCalled);
+            setCallSign(call.invoice, CallSignNumber.NotCalled);
         },
     });
 
