@@ -19,7 +19,7 @@ services:
       DB_MYSQL_HOST: "nginx_db"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "administrator"
-      DB_MYSQL_PASSWORD: "3dbkGMzraAGYKoV_wMjCe"
+      DB_MYSQL_PASSWORD: "3dbkGMzraAGYKoVwMjCe"
       DB_MYSQL_NAME: "nginx_db"
     volumes:
       - ./data:/data
@@ -34,10 +34,10 @@ services:
     image: 'jc21/mariadb-aria:latest'
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: '3dbkGMzraAGYKoV_wMjCe'
+      MYSQL_ROOT_PASSWORD: '3dbkGMzraAGYKoVwMjCed'
       MYSQL_DATABASE: 'nginx_db'
       MYSQL_USER: 'administrator'
-      MYSQL_PASSWORD: '3dbkGMzraAGYKoV_wMjCe'
+      MYSQL_PASSWORD: '3dbkGMzraAGYKoVwMjCe'
     volumes:
       - ./data/mysql:/var/lib/mysql
     networks:
