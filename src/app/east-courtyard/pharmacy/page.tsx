@@ -74,7 +74,7 @@ export default function Page() {
         return <Loading />;
     }
 
-    const patients = data;
+    const patients = data.sort((a, b) => a.signInNumber - b.signInNumber);
 
     return (
         <Layout title="西药房">

@@ -48,7 +48,7 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
 
     useEffect(() => {
         if (!call) {
-            setCall(props.patients.find(patient => patient.callSign === 1));
+            setCall(props.patients.find(patient => patient.callSign === "1"));
         }
     }, [props.patients, call]);
 
@@ -69,7 +69,7 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
 
         const placeholder = Array<OldPatient>(add).fill({
             window: Window.One,
-            callSign: 0,
+            callSign: CallSign.NotCalled,
             invoice: "",
             name: "",
             signInNumber: 0,
@@ -86,6 +86,8 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
             patients,
         };
     }, [props.patients, query.limit, query.offset]);
+
+    call && console.log(call);
 
     const setCallSign = (invoice: string, callSign: CallSign) => {
         patients.forEach(patient => {
@@ -166,7 +168,13 @@ const columns: ColumnDef<OldPatient>[] = [
             const name = getValue<string>();
 
             return (
-                <>{`${name.charAt(0) + name.slice(1).replace(/./g, "*")}`}</>
+                <>
+                    {name.length > 2
+                        ? name.charAt(0) +
+                          name.slice(1, name.length - 1).replace(/./g, "*") +
+                          name.charAt(name.length - 1)
+                        : name.charAt(0) + name.slice(1).replace(/./g, "*")}
+                </>
             );
         },
     },
@@ -262,8 +270,14 @@ function Call({
     const mutation = useMutation({
         mutationKey: ["patients", "cancel", call.invoice],
         mutationFn: () =>
-            fetch(`/api/patients/east-courtyard/pharmacy/${call.invoice}`, {
-                method: "PATCH",
+            fetch(`/api/patients/east-courtyard/pharmacy/call`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    fphm: call.invoice,
+                }),
             }),
         onSuccess: () => {
             setCall(undefined);

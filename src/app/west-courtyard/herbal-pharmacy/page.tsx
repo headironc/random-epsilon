@@ -76,9 +76,11 @@ export default function Page() {
         return <Loading />;
     }
 
-    const patients = data.filter(
-        patient => patient.pharmacy === 2 && patient.prescriptionType === 3,
-    );
+    const patients = data
+        .filter(
+            patient => patient.pharmacy === 2 && patient.prescriptionType === 3,
+        )
+        .sort((a, b) => a.signInNumber - b.signInNumber);
 
     return (
         <Layout title="草药房">

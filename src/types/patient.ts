@@ -31,8 +31,8 @@ export interface OldPatient {
 }
 
 export enum CallSign {
-    Called = 1,
-    NotCalled = 0,
+    Called = "1",
+    NotCalled = "0",
 }
 
 export interface OldFakePatient {

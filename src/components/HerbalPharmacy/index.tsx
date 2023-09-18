@@ -52,7 +52,7 @@ export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
 
     useEffect(() => {
         if (!call) {
-            setCall(take.find(patient => patient.callSign === 1));
+            setCall(take.find(patient => patient.callSign === "1"));
         }
     }, [call, take]);
 
@@ -97,7 +97,13 @@ const columns: ColumnDef<NewPatient>[] = [
             const name = getValue<string>();
 
             return (
-                <>{`${name.charAt(0) + name.slice(1).replace(/./g, "*")}`}</>
+                <>
+                    {name.length > 2
+                        ? name.charAt(0) +
+                          name.slice(1, name.length - 1).replace(/./g, "*") +
+                          name.charAt(name.length - 1)
+                        : name.charAt(0) + name.slice(1).replace(/./g, "*")}
+                </>
             );
         },
     },
@@ -122,7 +128,7 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
                 : query.limit - (count % query.limit);
 
         const placeholder = Array<NewPatient>(add).fill({
-            callSign: 0,
+            callSign: CallSign.NotCalled,
             invoice: "",
             name: "",
             id: 0,
