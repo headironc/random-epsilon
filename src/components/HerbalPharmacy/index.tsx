@@ -281,7 +281,7 @@ function Call({
             }),
         onSuccess: () => {
             setCall(undefined);
-            setCallSign(call.invoice, CallSignNumber.NotCalled);
+            setCallSign(call.invoice, CallSignNumber.Called);
         },
     });
 
