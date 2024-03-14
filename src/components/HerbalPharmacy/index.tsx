@@ -126,8 +126,8 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
             count === 0
                 ? query.limit
                 : count % query.limit === 0
-                ? 0
-                : query.limit - (count % query.limit);
+                  ? 0
+                  : query.limit - (count % query.limit);
 
         const placeholder = Array<NewPatient>(add).fill({
             callSign: CallSignNumber.NotCalled,
