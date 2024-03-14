@@ -11,17 +11,17 @@ const nextConfig = {
                 {
                     source: "/api/patients/east-courtyard/pharmacy/call",
                     destination:
-                        "http://192.168.61.135/hai/HttpEntry/?service=ALFYJ_GXJHBZ&urid=HIS&pwd=HIS",
+                        "http://192.168.61.68:7876/hai/HttpEntry/?service=ALFYJ_GXJHBZ&urid=HIS&pwd=HIS",
                 },
                 {
                     source: "/api/patients/east-courtyard/pharmacy",
                     destination:
-                        "http://192.168.61.135/hai/HttpEntry/?service=ALFYJ_PDDL&urid=HIS&pwd=HIS",
+                        "http://192.168.61.68:7876/hai/HttpEntry/?service=ALFYJ_PDDL&urid=HIS&pwd=HIS",
                 },
                 {
                     source: "/api/patients/herbal-pharmacy/call",
                     destination:
-                        "http://192.168.61.135/hai/HttpEntry/?service=PDJH_CYFJHBZ&urid=HIS&pwd=HIS",
+                        "http://192.168.61.68:7876/hai/HttpEntry/?service=PDJH_CYFJHBZ&urid=HIS&pwd=HIS",
                 },
             ],
         };
