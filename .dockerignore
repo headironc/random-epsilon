@@ -1,0 +1,6 @@
+.next
+
+Dockerfile
+docker-compose.yml
+nginx.yml
+.gitignore
