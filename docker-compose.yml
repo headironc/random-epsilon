@@ -7,11 +7,11 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - 3000:3000
+            - 3002:3002
         networks:
             - nginx
 
 networks:
     nginx:
-        external: true
         name: nginx
+        external: true
