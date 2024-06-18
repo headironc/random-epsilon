@@ -19,6 +19,7 @@ export interface NewPatient {
     prescriptionType: PrescriptionType;
     // 叫号时间
     callTime?: string;
+    benefited: boolean;
 }
 
 export interface OldPatient {
@@ -28,6 +29,7 @@ export interface OldPatient {
     signInNumber: number;
     signInTime: string;
     window: Window;
+    benefited: boolean;
 }
 
 export enum CallSign {
@@ -48,6 +50,7 @@ export interface OldFakePatient {
     JHBZ: CallSign;
     XH: string;
     QDSJ: string;
+    SFYM: "0" | "1";
 }
 
 export enum Window {
@@ -67,6 +70,7 @@ export interface NewFakePatient {
     CFLX: PrescriptionType;
     HJRQ?: string;
     ID: number;
+    SFYM: "0" | "1";
 }
 
 export enum PharmacyType {

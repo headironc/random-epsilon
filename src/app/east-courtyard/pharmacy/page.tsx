@@ -35,6 +35,8 @@ export default function Page() {
                 result: OldFakePatient | OldFakePatient[];
             } = await response.json();
 
+            console.log(result);
+
             if (Array.isArray(result)) {
                 const patients = result.map<OldPatient>(item => ({
                     window: item.CKH,
@@ -43,6 +45,7 @@ export default function Page() {
                     name: item.BRXM,
                     signInNumber: Number(item.XH),
                     signInTime: item.QDSJ,
+                    benefited: item.SFYM === "1",
                 }));
 
                 return patients;
@@ -59,6 +62,7 @@ export default function Page() {
                 signInNumber: Number(result.XH),
                 window: result.CKH,
                 signInTime: result.QDSJ,
+                benefited: result.SFYM === "1",
             };
 
             return [patient];

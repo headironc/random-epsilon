@@ -64,8 +64,8 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
             count === 0
                 ? query.limit
                 : count % query.limit === 0
-                ? 0
-                : query.limit - (count % query.limit);
+                  ? 0
+                  : query.limit - (count % query.limit);
 
         const placeholder = Array<OldPatient>(add).fill({
             window: Window.One,
@@ -74,6 +74,7 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
             name: "",
             signInNumber: 0,
             signInTime: "",
+            benefited: false,
         });
 
         const patients: OldPatient[] = [
@@ -164,7 +165,7 @@ const columns: ColumnDef<OldPatient>[] = [
         header: "姓名",
         accessorKey: "name",
         size: 536,
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
             const name = getValue<string>();
 
             return (
@@ -174,6 +175,8 @@ const columns: ColumnDef<OldPatient>[] = [
                           name.slice(1, name.length - 1).replace(/./g, "*") +
                           name.charAt(name.length - 1)
                         : name.charAt(0) + name.slice(1).replace(/./g, "*")}
+
+                    {row.original.benefited ? "（优待）" : ""}
                 </>
             );
         },
@@ -286,7 +289,7 @@ function Call({
     });
 
     useTts({
-        children: `请${call.signInNumber}号${call.name}到西药房${call.window}号窗口取药`,
+        children: `请${call.signInNumber}号${call.name}${call.benefited ? "（优待）" : ""}到西药房${call.window}号窗口取药`,
         voice,
         rate: 0.75,
         onEnd: () => mutation.mutate(),

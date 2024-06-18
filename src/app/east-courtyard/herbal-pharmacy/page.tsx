@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Layout from "~/components/Layout";
@@ -45,6 +46,7 @@ export default function Page() {
                     signInNumber: item.QDXH,
                     signInTime: item.QDRQ,
                     signInType: item.QDLX,
+                    benefited: item.SFYM === "1",
                 }));
 
                 return patients;
@@ -61,12 +63,32 @@ export default function Page() {
                 signInNumber: object.QDXH,
                 signInTime: object.QDRQ,
                 signInType: object.QDLX,
+                benefited: object.SFYM === "1",
             };
 
             return [patient];
         },
         refetchInterval: 1000 * 1,
     });
+
+    const patients = useMemo(() => {
+        if (!data) {
+            return [];
+        }
+
+        const cache = data
+            .filter(
+                patient =>
+                    patient.pharmacy === 7 && patient.prescriptionType === 3,
+            )
+            .sort((a, b) => a.signInNumber - b.signInNumber);
+
+        const patients = new Map<string, NewPatient>(
+            cache.map(patient => [patient.signInNumber.toString(), patient]),
+        );
+
+        return Array.from(patients.values());
+    }, [data]);
 
     if (error) {
         return <ErrorComponent message={error.message} />;
@@ -76,14 +98,8 @@ export default function Page() {
         return <Loading />;
     }
 
-    const patients = data
-        .filter(
-            patient => patient.pharmacy === 7 && patient.prescriptionType === 3,
-        )
-        .sort((a, b) => a.signInNumber - b.signInNumber);
-
     return (
-        <Layout title="草药房">
+        <Layout title="中药房">
             <main className="flex h-full flex-col justify-between">
                 <HerbalPharmacy patients={patients} />
             </main>

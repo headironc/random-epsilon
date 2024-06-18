@@ -95,7 +95,7 @@ const columns: ColumnDef<NewPatient>[] = [
         header: "姓名",
         accessorKey: "name",
         size: 528,
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
             const name = getValue<string>();
 
             return (
@@ -105,6 +105,8 @@ const columns: ColumnDef<NewPatient>[] = [
                           name.slice(1, name.length - 1).replace(/./g, "*") +
                           name.charAt(name.length - 1)
                         : name.charAt(0) + name.slice(1).replace(/./g, "*")}
+
+                    {row.original.benefited ? "（优待）" : ""}
                 </>
             );
         },
@@ -140,6 +142,7 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
             signInTime: "",
             signInType: 0,
             callTime: "",
+            benefited: false,
         });
 
         const patients: NewPatient[] = [
@@ -286,7 +289,7 @@ function Call({
     });
 
     useTts({
-        children: `请${call.signInNumber}号${call.name}到草药房3号窗口取药`,
+        children: `请${call.signInNumber}号${call.name}${call.benefited ? "（优待）" : ""}到草药房3号窗口取药`,
         voice,
         rate: 0.75,
         onEnd: () => mutation.mutate(),
