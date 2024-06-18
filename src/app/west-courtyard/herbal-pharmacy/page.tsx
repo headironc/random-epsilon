@@ -45,6 +45,7 @@ export default function Page() {
                     signInNumber: item.QDXH,
                     signInTime: item.QDRQ,
                     signInType: item.QDLX,
+                    benefited: item.SFYM === "1",
                 }));
 
                 return patients;
@@ -61,6 +62,7 @@ export default function Page() {
                 signInNumber: object.QDXH,
                 signInTime: object.QDRQ,
                 signInType: object.QDLX,
+                benefited: object.SFYM === "1",
             };
 
             return [patient];
@@ -83,7 +85,7 @@ export default function Page() {
         .sort((a, b) => a.signInNumber - b.signInNumber);
 
     return (
-        <Layout title="草药房">
+        <Layout title="中药房">
             <main className="flex h-full flex-col justify-between">
                 <HerbalPharmacy patients={patients} />
             </main>
