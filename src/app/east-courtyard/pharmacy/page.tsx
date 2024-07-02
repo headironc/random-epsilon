@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import Layout from "~/components/Layout";
 import Loading from "~/components/Loading";
 import ErrorComponent from "~/components/Error";
-import Pharmacy from "~/components/east-courtyard/Pharmacy";
+import Pharmacy from "~/components/Pharmacy";
 
 import { OldFakePatient, OldPatient } from "~/types/patient";
 
@@ -39,6 +39,7 @@ export default function Page() {
 
             if (Array.isArray(result)) {
                 const patients = result.map<OldPatient>(item => ({
+                    pharmacy: item.YFSB,
                     window: item.CKH,
                     callSign: item.JHBZ,
                     invoice: item.FPHM,
@@ -51,11 +52,10 @@ export default function Page() {
                 return patients;
             }
 
-            if (!result.FPHM) {
-                return [];
-            }
+            if (!result.FPHM) return [];
 
             const patient: OldPatient = {
+                pharmacy: result.YFSB,
                 invoice: result.FPHM,
                 name: result.BRXM,
                 callSign: result.JHBZ,
@@ -67,7 +67,7 @@ export default function Page() {
 
             return [patient];
         },
-        refetchInterval: 1000 * 1,
+        refetchInterval: 1000 * 2,
     });
 
     if (error) {
@@ -78,12 +78,14 @@ export default function Page() {
         return <Loading />;
     }
 
-    const patients = data.sort((a, b) => a.signInNumber - b.signInNumber);
+    const patients = data
+        .filter(patient => patient.pharmacy === "6")
+        .sort((a, b) => a.signInNumber - b.signInNumber);
 
     return (
         <Layout title="西药房">
             <main className="flex h-full flex-col justify-between">
-                <Pharmacy patients={patients} />
+                <Pharmacy patients={patients} pharmacy="6" />
             </main>
         </Layout>
     );

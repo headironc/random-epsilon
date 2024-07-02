@@ -19,23 +19,24 @@ export default function Page() {
     >({
         queryKey: ["patients", "east-courtyard/herbal-pharmacy"],
         queryFn: async () => {
-            const response = await fetch("/api/patients/herbal-pharmacy", {
-                method: "POST",
-            });
+            const response = await fetch(
+                "/api/patients/east-courtyard/herbal-pharmacy",
+                {
+                    method: "POST",
+                },
+            );
 
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
 
-            const [object]: [
-                | NewFakePatient
-                | {
-                      DATA: NewFakePatient[];
-                  },
-            ] = await response.json();
+            const { result }: { result: NewFakePatient | NewFakePatient[] } =
+                await response.json();
 
-            if ("DATA" in object) {
-                const patients = object.DATA.map<NewPatient>(item => ({
+            console.log(result);
+
+            if (Array.isArray(result)) {
+                const patients = result.map<NewPatient>(item => ({
                     id: item.ID,
                     name: item.BRXM,
                     prescriptionType: item.CFLX,
@@ -43,7 +44,7 @@ export default function Page() {
                     callSign: item.JHBZ,
                     pharmacy: item.YFSB,
                     callTime: item.HJRQ,
-                    signInNumber: item.QDXH,
+                    signInNumber: Number(item.QDXH),
                     signInTime: item.QDRQ,
                     signInType: item.QDLX,
                     benefited: item.SFYM === "1",
@@ -52,23 +53,25 @@ export default function Page() {
                 return patients;
             }
 
+            if (!result.FPHM) return [];
+
             const patient: NewPatient = {
-                id: object.ID,
-                name: object.BRXM,
-                prescriptionType: object.CFLX,
-                invoice: object.FPHM,
-                callSign: object.JHBZ,
-                pharmacy: object.YFSB,
-                callTime: object.HJRQ,
-                signInNumber: object.QDXH,
-                signInTime: object.QDRQ,
-                signInType: object.QDLX,
-                benefited: object.SFYM === "1",
+                id: result.ID,
+                name: result.BRXM,
+                prescriptionType: result.CFLX,
+                invoice: result.FPHM,
+                callSign: result.JHBZ,
+                pharmacy: result.YFSB,
+                callTime: result.HJRQ,
+                signInNumber: Number(result.QDXH),
+                signInTime: result.QDRQ,
+                signInType: result.QDLX,
+                benefited: result.SFYM === "1",
             };
 
             return [patient];
         },
-        refetchInterval: 1000 * 1,
+        refetchInterval: 1000 * 2,
     });
 
     const patients = useMemo(() => {
@@ -77,10 +80,7 @@ export default function Page() {
         }
 
         const cache = data
-            .filter(
-                patient =>
-                    patient.pharmacy === 7 && patient.prescriptionType === 3,
-            )
+            .filter(patient => patient.pharmacy === "7")
             .sort((a, b) => a.signInNumber - b.signInNumber);
 
         const patients = new Map<string, NewPatient>(
@@ -101,7 +101,7 @@ export default function Page() {
     return (
         <Layout title="中药房">
             <main className="flex h-full flex-col justify-between">
-                <HerbalPharmacy patients={patients} />
+                <HerbalPharmacy patients={patients} pharmacy="7" />
             </main>
         </Layout>
     );

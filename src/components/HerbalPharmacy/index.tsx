@@ -22,14 +22,17 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 import { Pagination } from "~/types";
-import { CallSignNumber, NewPatient } from "~/types/patient";
+import { NewPatient } from "~/types/patient";
 
 interface Query extends Pagination {}
 
-export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
-    const wait = props.patients.filter(patient => patient.callSign === 0);
+export default function HerbalPharmacy(props: {
+    patients: NewPatient[];
+    pharmacy: NewPatient["pharmacy"];
+}) {
+    const wait = props.patients.filter(patient => patient.callSign === "0");
     const take = props.patients.filter(
-        patient => patient.callSign === 1 || patient.callSign === 2,
+        patient => patient.callSign === "1" || patient.callSign === "2",
     );
 
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(
@@ -54,11 +57,11 @@ export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
 
     useEffect(() => {
         if (!call) {
-            setCall(take.find(patient => patient.callSign === 1));
+            setCall(take.find(patient => patient.callSign === "1"));
         }
     }, [call, take]);
 
-    const setCallSign = (invoice: string, callSign: CallSignNumber) => {
+    const setCallSign = (invoice: string, callSign: NewPatient["callSign"]) => {
         take.forEach(patient => {
             if (patient.invoice === invoice) {
                 patient.callSign = callSign;
@@ -69,8 +72,16 @@ export default function HerbalPharmacy(props: { patients: NewPatient[] }) {
     return (
         <>
             <div className="grid h-full grid-cols-2 gap-x-4">
-                <Patients patients={wait} title="准备中 Preparing" />
-                <Patients patients={take} title="请取药 Ready" />
+                <Patients
+                    patients={wait}
+                    title="准备中 Preparing"
+                    pharmacy={props.pharmacy}
+                />
+                <Patients
+                    patients={take}
+                    title="请取药 Ready"
+                    pharmacy={props.pharmacy}
+                />
             </div>
             {call && (
                 <Call
@@ -115,7 +126,11 @@ const columns: ColumnDef<NewPatient>[] = [
 
 type Title = "请取药 Ready" | "准备中 Preparing";
 
-function Patients(props: { patients: NewPatient[]; title: Title }) {
+function Patients(props: {
+    patients: NewPatient[];
+    title: Title;
+    pharmacy: NewPatient["pharmacy"];
+}) {
     const [query, setQuery] = useState<Query>({
         limit: 6,
         offset: 0,
@@ -132,15 +147,15 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
                   : query.limit - (count % query.limit);
 
         const placeholder = Array<NewPatient>(add).fill({
-            callSign: CallSignNumber.NotCalled,
+            callSign: "0",
             invoice: "",
             name: "",
-            id: 0,
-            pharmacy: 7,
-            prescriptionType: 3,
+            id: "",
+            pharmacy: props.pharmacy,
+            prescriptionType: "3",
             signInNumber: 0,
             signInTime: "",
-            signInType: 0,
+            signInType: "0",
             callTime: "",
             benefited: false,
         });
@@ -154,7 +169,7 @@ function Patients(props: { patients: NewPatient[]; title: Title }) {
             count,
             patients,
         };
-    }, [props.patients, query.limit, query.offset]);
+    }, [props.patients, query.limit, query.offset, props.pharmacy]);
 
     const pageCount = useMemo(
         () => Math.ceil(count / query.limit),
@@ -268,12 +283,12 @@ function Call({
     setCall: Dispatch<SetStateAction<NewPatient | undefined>>;
     open: boolean;
     voice: SpeechSynthesisVoice | undefined;
-    setCallSign: (invoice: string, callSign: CallSignNumber) => void;
+    setCallSign: (invoice: string, callSign: NewPatient["callSign"]) => void;
 }) {
     const mutation = useMutation({
         mutationKey: ["patients", "cancel", call.invoice],
         mutationFn: () =>
-            fetch(`/api/patients/herbal-pharmacy/call`, {
+            fetch(`/api/patients/east-courtyard/herbal-pharmacy/call`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -284,7 +299,7 @@ function Call({
             }),
         onSuccess: () => {
             setCall(undefined);
-            setCallSign(call.invoice, CallSignNumber.Called);
+            setCallSign(call.invoice, "0");
         },
     });
 

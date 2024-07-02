@@ -1,95 +1,124 @@
 export interface NewPatient {
-    id: number;
-    // 药房
-    // 2代表草药房(药剂科)，7代表东院草药房(药剂科)
-    pharmacy: PharmacyType;
-    // 1代表叫号，0代表未叫号，2代表已叫号
-    callSign: CallSignNumber;
-    // 发票号
+    /**
+     * 病人id
+     */
+    id: string;
+    /**
+     * 药房 1 北关门诊药房（药剂科） 2 北关草药房（药剂科） 6 雅居门诊药房（药剂科） 7 雅居草药房（药剂科）
+     */
+    pharmacy: "1" | "2" | "6" | "7";
+    /**
+     * 叫号 1代表叫号，0代表未叫号，2代表已叫号
+     */
+    callSign: "0" | "1" | "2";
+    /**
+     * 发票号
+     */
     invoice: string;
-    // 病人姓名
+    /**
+     * 病人姓名
+     */
     name: string;
-    // 签到时间
+    /**
+     * 签到时间
+     */
     signInTime: string;
-    // 签到类型, 0代表未喊号，1代表喊号，
-    signInType: SignType;
-    // 签到序号
+    /**
+     * 签到类型 0代表未签到，1代表已签到
+     */
+    signInType: "0" | "1";
+    /**
+     * 签到序号
+     */
     signInNumber: number;
-    // 处方类型，1代表西药，2代表中成药，3代表中草药
-    prescriptionType: PrescriptionType;
-    // 叫号时间
+    /**
+     * 处方类型 1 西药 2 中成药 3 中草药
+     */
+    prescriptionType: "1" | "2" | "3";
+    /**
+     * 叫号时间
+     */
     callTime?: string;
+    /**
+     * 是否优勉
+     */
     benefited: boolean;
 }
 
 export interface OldPatient {
-    name: string;
-    invoice: string;
-    callSign: CallSign;
+    /**
+     * 药房类型 1 北关门诊药房（药剂科） 2 北关草药房（药剂科） 6 雅居门诊药房（药剂科） 7 雅居草药房（药剂科）
+     */
+    pharmacy: "1" | "2" | "6" | "7";
+    /**
+     * 签到序号
+     */
     signInNumber: number;
+    /**
+     * 窗口
+     */
+    window: "1" | "2" | "3";
+    /**
+     * 叫号标志
+     */
+    callSign: "0" | "1";
+    /**
+     * 病人姓名
+     */
+    name: string;
+    /**
+     * 发票号
+     */
+    invoice: string;
+    /**
+     * 签到时间
+     */
     signInTime: string;
-    window: Window;
+    /**
+     * 是否优勉
+     */
     benefited: boolean;
 }
 
-export enum CallSign {
-    Called = "1",
-    NotCalled = "0",
-}
-
-export enum CallSignNumber {
-    Calling = 1,
-    NotCalled = 0,
-    Called = 2,
-}
-
 export interface OldFakePatient {
-    BRXM: string;
-    CKH: Window;
-    FPHM: string;
-    JHBZ: CallSign;
+    /**
+     * 药房类型 1 北关门诊药房（药剂科） 2 北关草药房（药剂科） 6 雅居门诊药房（药剂科） 7 雅居草药房（药剂科）
+     */
+    YFSB: "1" | "2" | "6" | "7";
     XH: string;
+    CKH: "1" | "2" | "3";
+    JHBZ: "0" | "1";
+    BRXM: string;
+    FPHM: string;
     QDSJ: string;
     SFYM: "0" | "1";
 }
 
-export enum Window {
-    One = "1",
-    Two = "2",
-    Three = "3",
-}
-
 export interface NewFakePatient {
-    YFSB: PharmacyType;
-    JHBZ: CallSignNumber;
+    /**
+     * 药房类型 1 北关门诊药房（药剂科） 2 北关草药房（药剂科） 6 雅居门诊药房（药剂科） 7 雅居草药房（药剂科）
+     */
+    YFSB: "1" | "2" | "6" | "7";
+    /**
+     * 叫号标志 0代表未叫号，1代表已叫号，2代表叫号
+     */
+    JHBZ: "0" | "1" | "2";
     FPHM: string;
     BRXM: string;
     QDRQ: string;
-    QDLX: SignType;
-    QDXH: number;
-    CFLX: PrescriptionType;
+    /**
+     * 签到类型 0代表未签到，1代表已签到
+     */
+    QDLX: "0" | "1";
+    QDXH: string;
+    /**
+     * 处方类型 1 西药 2 中成药 3 中草药
+     */
+    CFLX: "1" | "2" | "3";
     HJRQ?: string;
-    ID: number;
+    ID: string;
+    /**
+     * 是否优勉
+     */
     SFYM: "0" | "1";
-}
-
-export enum PharmacyType {
-    // 西药房
-    WesternMedicine = 2,
-    // 草药房
-    ChineseHerbalMedicine = 7,
-}
-
-export enum SignType {
-    Signed = 1,
-    NotSigned = 0,
-}
-
-export enum PrescriptionType {
-    // 西药
-    WesternMedicine = 1,
-    // 中成药
-    ChinesePatentDrug = 2,
-    // 中草药
-    ChineseHerbalMedicine = 3,
 }

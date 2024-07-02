@@ -21,11 +21,14 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 import { Pagination } from "~/types";
-import { CallSign, OldPatient, Window } from "~/types/patient";
+import { OldPatient } from "~/types/patient";
 
 interface Query extends Pagination {}
 
-export default function Pharmacy(props: { patients: OldPatient[] }) {
+export default function Pharmacy(props: {
+    patients: OldPatient[];
+    pharmacy: OldPatient["pharmacy"];
+}) {
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(
         speechSynthesis.getVoices() ?? [],
     );
@@ -68,8 +71,9 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
                   : query.limit - (count % query.limit);
 
         const placeholder = Array<OldPatient>(add).fill({
-            window: Window.One,
-            callSign: CallSign.NotCalled,
+            pharmacy: props.pharmacy,
+            window: "1",
+            callSign: "0",
             invoice: "",
             name: "",
             signInNumber: 0,
@@ -86,11 +90,11 @@ export default function Pharmacy(props: { patients: OldPatient[] }) {
             count,
             patients,
         };
-    }, [props.patients, query.limit, query.offset]);
+    }, [props.patients, query.limit, query.offset, props.pharmacy]);
 
     call && console.log(call);
 
-    const setCallSign = (invoice: string, callSign: CallSign) => {
+    const setCallSign = (invoice: string, callSign: OldPatient["callSign"]) => {
         patients.forEach(patient => {
             if (patient.invoice === invoice) {
                 patient.callSign = callSign;
@@ -268,7 +272,7 @@ function Call({
     setCall: Dispatch<SetStateAction<OldPatient | undefined>>;
     open: boolean;
     voice: SpeechSynthesisVoice | undefined;
-    setCallSign: (invoice: string, callSign: CallSign) => void;
+    setCallSign: (invoice: string, callSign: OldPatient["callSign"]) => void;
 }) {
     const mutation = useMutation({
         mutationKey: ["patients", "cancel", call.invoice],
@@ -284,7 +288,7 @@ function Call({
             }),
         onSuccess: () => {
             setCall(undefined);
-            setCallSign(call.invoice, CallSign.NotCalled);
+            setCallSign(call.invoice, "0");
         },
     });
 
