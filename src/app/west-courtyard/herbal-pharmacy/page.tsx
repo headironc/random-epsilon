@@ -53,7 +53,7 @@ export default function Page() {
                 return patients;
             }
 
-            if (!result.FPHM) return [];
+            if (!result?.FPHM) return [];
 
             const patient: NewPatient = {
                 id: result.ID,

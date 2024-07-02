@@ -52,7 +52,7 @@ export default function Page() {
                 return patients;
             }
 
-            if (!result.FPHM) return [];
+            if (!result?.FPHM) return [];
 
             const patient: OldPatient = {
                 pharmacy: result.YFSB,
