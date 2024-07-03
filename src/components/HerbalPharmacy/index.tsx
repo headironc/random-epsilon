@@ -53,6 +53,8 @@ export default function HerbalPharmacy(props: {
         [voices],
     );
 
+    console.log(voice);
+
     const [call, setCall] = useState<NewPatient | undefined>();
 
     useEffect(() => {

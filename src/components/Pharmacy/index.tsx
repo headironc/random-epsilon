@@ -47,6 +47,8 @@ export default function Pharmacy(props: {
         [voices],
     );
 
+    console.log(voice);
+
     const [call, setCall] = useState<OldPatient | undefined>();
 
     useEffect(() => {
@@ -298,6 +300,7 @@ function Call({
         rate: 0.75,
         onEnd: () => mutation.mutate(),
         autoPlay: true,
+        onError: message => console.error(message),
     });
 
     return (
