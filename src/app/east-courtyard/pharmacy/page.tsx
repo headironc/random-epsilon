@@ -67,7 +67,7 @@ export default function Page() {
 
             return [patient];
         },
-        refetchInterval: 1000 * 2,
+        refetchInterval: 1000 * 1,
     });
 
     if (error) {
